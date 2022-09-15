@@ -10,7 +10,7 @@ class NoticiasController extends AppController {
 			'message' => 'Failed to process request'
 		];
 		$result = $this->Noticia->find('all', [
-			'order' => array('data' => 'desc')
+			'order' => ['data' => 'desc']
 		]);
 		if(!empty($result)){
 			$response = [
@@ -24,19 +24,19 @@ class NoticiasController extends AppController {
 	
 		$this->response->type('application/json');
 		$this->response->body(json_encode($response));
+
 		return $this->response->send();
-
-
 	}
 
 	public function view($id) {
 		$this->layout = false;
 		//set default response
-		$response = array('status'=>'failed', 'message'=>'Failed to process request');
+		$response = [
+			'status'=>'failed', 
+			'message'=>'Failed to process request'
+		];
 				
-		//check if ID was passed
 		if(!empty($id)){
-			//find data by ID
 			$result = $this->Noticia->findById($id);
 			if(!empty($result)){
 				$response = array('status'=>'success','data'=>$result);  

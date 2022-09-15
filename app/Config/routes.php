@@ -37,7 +37,7 @@
  */
 	CakePlugin::routes();
 
-	Router::mapResources(['recipes', 'posts', 'noticias']);
+	Router::mapResources(['noticias', 'eventos', 'informativos']);
 	Router::parseExtensions();
 
 /**
