@@ -1,7 +1,12 @@
 <?php 
 class InformativosController extends AppController {
 
-	public $components = array('RequestHandler');
+  public $components = array('RequestHandler', 'Paginator');
+
+  public $paginate = array(
+      'limit' => 10,
+      'order' => ['created' => 'desc'],
+  );
 
   public function index(){
     $this->layout = false;
@@ -9,7 +14,10 @@ class InformativosController extends AppController {
       'status' => 'failed',
       'message' => 'Failed to process request'
     ];
-    $result = $this->Informativo->find('all');
+    
+    $this->Paginator->settings = $this->paginate;
+		$result = $this->Paginator->paginate('Informativo');
+
     if(!empty($result)){
       $response = [
         'status' => 'success',

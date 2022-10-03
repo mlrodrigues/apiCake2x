@@ -1,7 +1,14 @@
 <?php 
 class NoticiasController extends AppController {
 
-	public $components = array('RequestHandler');
+	public $components = array('RequestHandler', 'Paginator');
+
+    public $paginate = array(
+        'limit' => 10,
+        'order' => array(
+            'Noticia.data' => 'desc'
+        )
+    );
 
 	public function index() {
 		$this->layout = false;
@@ -9,9 +16,10 @@ class NoticiasController extends AppController {
 			'status' => 'failed',
 			'message' => 'Failed to process request'
 		];
-		$result = $this->Noticia->find('all', [
-			'order' => ['data' => 'desc']
-		]);
+		
+		$this->Paginator->settings = $this->paginate;
+		$result = $this->Paginator->paginate('Noticia');
+
 		if(!empty($result)){
 			$response = [
 				'status' => 'success',

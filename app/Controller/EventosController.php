@@ -1,7 +1,12 @@
 <?php 
 class EventosController extends AppController {
 
-	public $components = array('RequestHandler');
+	public $components = array('RequestHandler', 'Paginator');
+
+  public $paginate = array(
+      'limit' => 10,
+      'order' => ['data_inicio' => 'desc'],
+  );
 
   public function index(){
     $this->layout = false;
@@ -9,7 +14,10 @@ class EventosController extends AppController {
       'status' => 'failed',
       'message' => 'Failed to process request'
     ];
-    $result = $this->Evento->find('all');
+    
+    $this->Paginator->settings = $this->paginate;
+		$result = $this->Paginator->paginate('Evento');
+
     if(!empty($result)){
       $response = [
         'status' => 'success',

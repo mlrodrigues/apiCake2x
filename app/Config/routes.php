@@ -29,7 +29,9 @@
 /**
  * ...and connect the rest of 'Pages' controller's URLs.
  */
-	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
+	Router::connect('/noticias/*', array('controller' => 'noticias'));
+	Router::connect('/eventos/*', array('controller' => 'eventos'));
+	Router::connect('/informativos/*', array('controller' => 'informativos'));
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on
