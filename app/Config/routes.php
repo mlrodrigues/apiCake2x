@@ -32,6 +32,8 @@
 	Router::connect('/noticias/*', array('controller' => 'noticias'));
 	Router::connect('/eventos/*', array('controller' => 'eventos'));
 	Router::connect('/informativos/*', array('controller' => 'informativos'));
+	Router::connect('/login', array('controller' => 'usuarios', 'action' => 'login'));
+	Router::connect('/login', ['action' => 'login', 'controller' => 'usuarios', 'method' => 'POST']);
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on
@@ -39,7 +41,7 @@
  */
 	CakePlugin::routes();
 
-	Router::mapResources(['noticias', 'eventos', 'informativos']);
+	Router::mapResources(['noticias', 'eventos', 'informativos', 'usuarios']);
 	Router::parseExtensions();
 
 /**
