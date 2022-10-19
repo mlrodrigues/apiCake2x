@@ -44,7 +44,15 @@ class AppController extends Controller {
 				]
 			],	
 			'authError' => 'Acesso restrito',
-			'flash' => ['key' => 'auth', 'element' => 'alert', 'clear' => true]
+			'flash' => ['key' => 'auth', 'element' => 'alert', 'clear' => true],
+			'ADmad/JwtAuth.Jwt' => [
+				'scope' => ['Usuarios.status' => 1],
+				'parameter' => '_token',
+				'userModel' => 'Usuarios',
+				'fields' => [
+					'username' => 'login',
+				],
+			],
 		],
 		'Cookie',
 	];

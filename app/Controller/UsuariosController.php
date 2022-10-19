@@ -1,5 +1,6 @@
 <?php
 
+use Firebase\JWT\JWT;
 App::uses('AppController', 'Controller');
 
 /**
@@ -13,43 +14,49 @@ class UsuariosController extends AppController{
 	/**
 	 ** @return CakeResponse|false
 	**/
-	public function login(){  
-		if($this->request->is('post')) {
-			if($this->Auth->login()) {
-				return $this->redirect( $this->Auth->redirectUrl() );
+	public function login(){    
+		$this->layout = false;
+		$response = [
+      'status'=>'failed', 
+      'message'=>'HTTP method not allowed'
+    ];
+		if($this->request->is('post')){
+			$data = $this->request->input('json_decode', true);
+			if(empty($data)){
+				$data = $this->request->data;
 			}
-			else{
-				var_dump("tamoaki");die;
-				$this->Flash->set('Usuário ou senha inválidos. Tente novamente.', array(
-					'key' => 'auth',
-					'element' => 'alert',
-					'clear' => true
-				));
+			$response = [
+        'status'=>'failed', 
+        'message'=>'Insira os dados!'
+      ];
+			if(!empty($data)){
+				if ($this->Auth->login()) {
+					$user = $this->Auth->user();
+					$token = JWT::encode($user, Configure::read('Security.salt'), 'HS256');
+					var_dump($token);die;
+					// $this->set('user', $user);
+					// $this->set('token', $token);
+					// $this->set('_serialize', array('user', 'token'));
+				}
+				else {
+					$this->response = $this->response->statusCode(401);
+					$user = [
+						'message' => 'invalid user'
+					];
+				}				
 			}
 		}
-		return false;    
 
+    $this->response->type('application/json');
+		$this->response->body(json_encode($response));
+
+		return $this->response->send();		
 	}
 
 	public function logout(){
 		$this->Auth->logout();
 		return $this->redirect($this->Auth->logout);
 	}
-
-	// public function login(){
-	// 	$this->layout = false;
-
- 	// 	// if($result->isValid()){
-	// 	// 	$user = $result->getData();
-	// 	// }
-	// 	// else{
-	// 	// 	$this->response = $this->response->statusCode(401);
-	// 	// 	$user = [
-	// 	// 		'message' => 'invalid user'
-	// 	// 	];
-	// 	// }
-	// 	// $this->set('user', $user);
-	// 	// $this->set('serialize', 'user');
 
 	/**
  * @return void

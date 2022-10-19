@@ -23,6 +23,9 @@ if (!defined('DS')) {
 	define('DS', DIRECTORY_SEPARATOR);
 }
 
+require __DIR__ . '\..\..\vendors\autoload.php';
+
+
 /**
  * These defines should only be edited if you have CakePHP installed in
  * a directory layout other than the way it is distributed.
