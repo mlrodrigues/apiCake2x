@@ -1,6 +1,7 @@
 <?php
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 App::uses('AppController', 'Controller');
 
 /**
@@ -16,41 +17,32 @@ class UsuariosController extends AppController{
 	**/
 	public function login(){    
 		$this->layout = false;
-		$response = [
-      'status'=>'failed', 
-      'message'=>'HTTP method not allowed'
-    ];
-		if($this->request->is('post')){
-			$data = $this->request->input('json_decode', true);
-			if(empty($data)){
-				$data = $this->request->data;
+		if($this->request->is('post')) {
+			if ($this->Auth->login()){
+				$user = $this->Auth->user();
+				$playload = [
+					"exp" => time() + 10,
+					"iat" => time(),
+					"usuario" => $user['usuario']
+				];
+				$key = Configure::read('Security.salt');
+				$token = JWT::encode($playload, $key, 'HS256',);
+				$response = [
+					'status' => 'success',
+					'data' => $token
+				];	
 			}
-			$response = [
-        'status'=>'failed', 
-        'message'=>'Insira os dados!'
-      ];
-			if(!empty($data)){
-				if ($this->Auth->login()) {
-					$user = $this->Auth->user();
-					$token = JWT::encode($user, Configure::read('Security.salt'), 'HS256');
-					var_dump($token);die;
-					// $this->set('user', $user);
-					// $this->set('token', $token);
-					// $this->set('_serialize', array('user', 'token'));
-				}
-				else {
-					$this->response = $this->response->statusCode(401);
-					$user = [
-						'message' => 'invalid user'
-					];
-				}				
+			else {
+				$this->response = $this->response->statusCode(401);
+				$user = [
+					'message' => 'invalid user'
+				];
 			}
 		}
-
-    $this->response->type('application/json');
+		$this->response->type('application/json');
 		$this->response->body(json_encode($response));
 
-		return $this->response->send();		
+		return $this->response->send();
 	}
 
 	public function logout(){
