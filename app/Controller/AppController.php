@@ -50,7 +50,8 @@ class AppController extends Controller {
 				'parameter' => '_token',
 				'userModel' => 'Usuarios',
 				'fields' => [
-					'username' => 'login',
+					'username' => 'usuario',
+					'password' => 'senha'
 				],
 			],
 		],

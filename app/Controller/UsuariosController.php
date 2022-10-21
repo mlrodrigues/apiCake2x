@@ -15,10 +15,21 @@ class UsuariosController extends AppController{
 	/**
 	 ** @return CakeResponse|false
 	**/
-	public function login(){    
+	public function login(){ 
 		$this->layout = false;
-		if($this->request->is('post')) {
-			if ($this->Auth->login()){
+		$response = [
+			'status'=>'failed', 
+			'message'=>'HTTP method not allowed'
+		];		
+		if($this->request->is('post')){
+			$user = $this->request->input('json_decode', true);
+			$this->request->data = [
+				"Usuario" => [
+					'usuario' => $user['Usuario']['usuario'],
+					'senha' => $user['Usuario']['senha']
+				]
+			];
+			if($this->Auth->Login()){
 				$user = $this->Auth->user();
 				$playload = [
 					"exp" => time() + 10,
@@ -27,23 +38,24 @@ class UsuariosController extends AppController{
 				];
 				$key = Configure::read('Security.salt');
 				$token = JWT::encode($playload, $key, 'HS256',);
+				$this->response->statusCode(200);
 				$response = [
 					'status' => 'success',
 					'data' => $token
-				];	
+				];
 			}
-			else {
-				$this->response = $this->response->statusCode(401);
-				$user = [
-					'message' => 'invalid user'
+			else{
+				$this->response->statusCode(401);
+				$response = [
+					'message' => 'Usuário ou senha errada'
 				];
 			}
 		}
 		$this->response->type('application/json');
 		$this->response->body(json_encode($response));
-
 		return $this->response->send();
-	}
+	}   
+
 
 	public function logout(){
 		$this->Auth->logout();
