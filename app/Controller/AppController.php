@@ -19,6 +19,8 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 App::uses('Controller', 'Controller');
 
 /**
@@ -59,6 +61,20 @@ class AppController extends Controller {
 	];
 
 	function beforeFilter() {
-		// $this->Auth->allow();
+		if(empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])){
+			$this->response->statusCode(401);
+			$response = [
+				'status'=>'failed', 
+				'message'=>'Não Autorizado'
+			];	
+		}
+		$jwt = explode(" ", $_SERVER['REDIRECT_HTTP_AUTHORIZATION']);
+		try{
+			$decoded = JWT::decode($jwt[1], new Key(Configure::read('Security.salt'), 'HS256'));
+		}
+		catch (Exception $e){
+			$this->Auth->logout();
+			return $this->redirect($this->Auth->logout);
+		}
 	}
 }

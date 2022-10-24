@@ -17,11 +17,14 @@ class UsuariosController extends AppController{
 	**/
 	public function login(){ 
 		$this->layout = false;
-		$this->response->statusCode(401);
-		$response = [
-			'status'=>'failed', 
-			'message'=>'Não Autorizado'
-		];		
+		if(empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])){
+			$this->response->statusCode(401);
+			$response = [
+				'status'=>'failed', 
+				'message'=>'Não Autorizado'
+			];	
+		}
+	
 		if($this->request->is('post')){
 			$user = $this->request->input('json_decode', true);
 			$this->request->data = [
