@@ -29,9 +29,6 @@
 /**
  * ...and connect the rest of 'Pages' controller's URLs.
  */
-	Router::connect('/noticias/*', array('controller' => 'noticias'));
-	Router::connect('/eventos/*', array('controller' => 'eventos'));
-	Router::connect('/informativos/*', array('controller' => 'informativos'));
 	Router::connect('/login', array('controller' => 'usuarios', 'action' => 'login'));
 	Router::connect('/login', ['action' => 'login', 'controller' => 'usuarios', 'method' => 'POST']);
 
