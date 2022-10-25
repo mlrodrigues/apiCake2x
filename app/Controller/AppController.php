@@ -61,20 +61,26 @@ class AppController extends Controller {
 	];
 
 	function beforeFilter() {
-		if(empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])){
+		$jwt = explode(" ", $_SERVER['REDIRECT_HTTP_AUTHORIZATION']);
+		
+		if($jwt[0] == ''){
+
 			$this->response->statusCode(401);
 			$response = [
 				'status'=>'failed', 
 				'message'=>'Não Autorizado'
 			];	
+			return $response;
 		}
-		$jwt = explode(" ", $_SERVER['REDIRECT_HTTP_AUTHORIZATION']);
-		try{
-			$decoded = JWT::decode($jwt[1], new Key(Configure::read('Security.salt'), 'HS256'));
+		else{
+			try{			
+				JWT::decode($jwt[1], new Key(Configure::read('Security.salt'), 'HS256'));
+			}
+			catch (Exception $e){
+				$this->Auth->logout();
+				return $this->redirect($this->Auth->logout);
+			}
 		}
-		catch (Exception $e){
-			$this->Auth->logout();
-			return $this->redirect($this->Auth->logout);
-		}
+		
 	}
 }
