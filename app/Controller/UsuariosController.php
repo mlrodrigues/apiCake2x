@@ -36,7 +36,7 @@ class UsuariosController extends AppController{
 			if($this->Auth->Login()){
 				$user = $this->Auth->user();
 				$playload = [
-					"exp" => time() + 10,
+					"exp" => time() + 100000,
 					"iat" => time(),
 					"usuario" => $user['usuario']
 				];

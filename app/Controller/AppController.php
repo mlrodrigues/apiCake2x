@@ -48,7 +48,7 @@ class AppController extends Controller {
 			'authError' => 'Acesso restrito',
 			'flash' => ['key' => 'auth', 'element' => 'alert', 'clear' => true],
 			'ADmad/JwtAuth.Jwt' => [
-				'scope' => ['Usuarios.status' => 1],
+				'scope' => ['Usuarios.ativo' => 1],
 				'parameter' => '_token',
 				'userModel' => 'Usuarios',
 				'fields' => [
@@ -64,7 +64,6 @@ class AppController extends Controller {
 		$jwt = explode(" ", $_SERVER['REDIRECT_HTTP_AUTHORIZATION']);
 		
 		if($jwt[0] == ''){
-
 			$this->response->statusCode(401);
 			$response = [
 				'status'=>'failed', 
@@ -81,6 +80,5 @@ class AppController extends Controller {
 				return $this->redirect($this->Auth->logout);
 			}
 		}
-		
 	}
 }
